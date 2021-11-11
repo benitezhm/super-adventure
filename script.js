@@ -1,21 +1,80 @@
 'use strict';
 
-let secretNumber = Math.trunc(Math.random() * 20) + 1;
+const getSecretNumber = (maxNumber) => {
+    return Math.trunc(Math.random() * maxNumber) + 1;
+}
+
+const displayMessage = (message) => {
+    document.querySelector('.message').textContent = message;
+}
+
+const displayScore = (score) => {
+    document.querySelector('.score').textContent = score;
+}
+
+const displayNumber = (number) => {
+    document.querySelector('.number').textContent = number;
+}
+
+const displayHighScore = (score) => {
+    document.querySelector('.highscore').textContent = highScore;
+}
+
+const disableCheckButton = (disable) => {
+    document.querySelector('.check').disabled = disable;
+}
+
+let secretNumber = getSecretNumber(20);
 let score = 20;
 let highScore = 0;
+
+const resetInputGuessValue = (value) => {
+    document.querySelector('.guess').value = value;
+    document.querySelector('.guess').focus();
+}
+
+const setBackgroundColor = (color) => {
+    document.querySelector('body').style.backgroundColor = color;
+}
+
+const setNumberWidth = (width) => {
+    document.querySelector('.number').style.width = width;
+}
+
+const setGameOver = () => {
+    displayMessage('💀 Game Over!');
+    disableCheckButton(true);
+    displayScore(0);
+}
+
+const setGameWon = () => {
+    displayNumber(secretNumber);
+    displayMessage('🎉 Correct Number!');
+    highScore = score > highScore ? score : highScore;
+    displayHighScore(highScore);
+    setBackgroundColor('#60b347');
+    setNumberWidth('30rem');
+}
+
+const setWrongNumber = (message) => {
+    displayMessage(message);
+    score--;
+    displayScore(score);
+}
 
 // reset the game
 document.querySelector('.again').addEventListener('click', function () {
     score = 20;
-    secretNumber = Math.trunc(Math.random() * 20) + 1;
-    document.querySelector('.score').textContent = score;
-    document.querySelector('.number').textContent = '?';
-    document.querySelector('.message').textContent = 'Start guessing...';
-    document.querySelector('.check').disabled = false;
-    document.querySelector('.guess').value = '';
-    document.querySelector('.guess').focus();
-    document.querySelector('.number').style.width = '15rem';
-    document.querySelector('body').style.backgroundColor = '#222';
+    secretNumber = getSecretNumber(20);
+    displayScore(score);
+    displayNumber('?');
+    displayMessage('Start guessing...');
+    disableCheckButton(false);
+
+    // set styles
+    resetInputGuessValue('');
+    setNumberWidth('15rem');
+    setBackgroundColor('#222');
 
 })
 
@@ -25,26 +84,14 @@ document.querySelector('.check').addEventListener('click', function () {
 
     if (score > 1) {
         if (!guess) {
-            document.querySelector('.message').textContent = '⛔️ Please enter a number';
+            displayMessage('⛔️ Please enter a number');
         } else if (guess === secretNumber) {
-            document.querySelector('.number').textContent = secretNumber;
-            document.querySelector('body').style.backgroundColor = '#60b347';
-            document.querySelector('.number').style.width = '30rem';
-            document.querySelector('.message').textContent = '🎉 Correct Number!';
-            highScore = score > highScore ? score : highScore;
-            document.querySelector('.highscore').textContent = highScore;
-        } else if (guess > secretNumber) {
-            document.querySelector('.message').textContent = '📈 Too high!';
-            score--;
-            document.querySelector('.score').textContent = score;
-        } else if (guess < secretNumber) {
-            document.querySelector('.message').textContent = '📉 Too low!';
-            score--;
-            document.querySelector('.score').textContent = score;
+            setGameWon();
+        } else if (guess !== secretNumber) {
+            let message = (guess > secretNumber) ? '📈 Too high!' : '📉 Too low!';
+            setWrongNumber(message);
         }
     } else {
-        document.querySelector('.message').textContent = '💀 Game Over!';
-        document.querySelector('.check').disabled = true;
-        document.querySelector('.score').textContent = 0;
+        setGameOver();
     }
-});
+});``
