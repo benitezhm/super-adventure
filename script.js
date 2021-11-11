@@ -14,7 +14,7 @@ document.querySelector('.again').addEventListener('click', function () {
     document.querySelector('.check').disabled = false;
     document.querySelector('.guess').value = '';
     document.querySelector('.guess').focus();
-    document.querySelector('.number').style.wid`th = '15rem';
+    document.querySelector('.number').style.width = '15rem';
     document.querySelector('body').style.backgroundColor = '#222';
 
 })
